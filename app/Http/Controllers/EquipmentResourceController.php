@@ -6,13 +6,16 @@ use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use Illuminate\Http\Request;
 use App\Models\Equipment;
+use Illuminate\Pagination\Paginator;
 
 class EquipmentResourceController extends Controller
 {
     
     public function index()
     {
-        return new EquipmentCollection(Equipment::all());
+        $per_page = request()->get('per_page', 10);
+        $equipment = Equipment::paginate($per_page);
+        return new EquipmentCollection($equipment);
     }
 
     public function store(Request $request)

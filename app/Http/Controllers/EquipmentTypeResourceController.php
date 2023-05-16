@@ -12,7 +12,10 @@ class EquipmentTypeResourceController extends Controller
     
     public function index()
     {
-        return new EquipmentTypeCollection(EquipmentType::all());
+        $per_page = request()->get('per_page', 10);
+        $equipment = EquipmentType::paginate($per_page);
+        return new EquipmentTypeCollection($equipment);
+        
     }
 
 }
