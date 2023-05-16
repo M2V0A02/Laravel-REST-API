@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('serial_number');
             $table->text('desc')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('equipment_type_id')
                 ->references('id')
                 ->on('equipment_types');
