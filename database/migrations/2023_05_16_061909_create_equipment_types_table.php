@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('equipment_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name_equipment_type');
-            $table->string('serial_number_mask');
+            $table->string('name');
+            $table->string('mask');
             $table->timestamps();
         });
     }
