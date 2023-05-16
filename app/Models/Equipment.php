@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Equipment extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'equipment_type_id',
+        'serial_number',
+        'desc'
+    ];
+    
+    public function equipmentType()
+    {
+        return $this->belongsTo(EquipmentType::class);
+    }
 }

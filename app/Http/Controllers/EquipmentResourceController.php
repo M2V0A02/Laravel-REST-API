@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EquipmentCollection;
 use Illuminate\Http\Request;
+use App\Models\Equipment;
 
-class EquipmentResouceController extends Controller
+class EquipmentResourceController extends Controller
 {
     
     public function index()
     {
+        return new EquipmentCollection(Equipment::all());
     }
 
     public function store(Request $request)

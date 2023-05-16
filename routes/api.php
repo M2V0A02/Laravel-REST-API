@@ -1,24 +1,14 @@
 <?php
 
-use App\Http\Controllers\EquipmentResouceController;
-use App\Http\Controllers\EquipmentTypeControllerController;
+use App\Http\Controllers\EquipmentResourceController;
+use App\Http\Controllers\EquipmentTypeResourceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
-Route::resource('equipment', EquipmentResouceController::class)->except([
+Route::resource('equipment', EquipmentResourceController::class)->except([
     'create', 'edit'
 ]);
-Route::resource('equipment-types', EquipmentTypeControllerController::class)->only([
+Route::resource('equipment-types', EquipmentTypeResourceController::class)->only([
     'index'
 ]);
 

@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class EquipmentType extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'mask'
+    ];
+
+    public function equipment()
+    {
+        return $this->hasMany(Equipment::class);
+    }
 }
