@@ -6,7 +6,6 @@ use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use Illuminate\Http\Request;
 use App\Models\Equipment;
-use Illuminate\Pagination\Paginator;
 
 class EquipmentResourceController extends Controller
 {
@@ -14,8 +13,15 @@ class EquipmentResourceController extends Controller
     public function index()
     {
         $per_page = request()->get('per_page', 10);
-        $equipment = Equipment::paginate($per_page);
-        return new EquipmentCollection($equipment);
+        $serial_number = request()->get('serial_number', '');
+        $desc = request()->get('desc', '');
+        $query = Equipment::query();
+        if ($serial_number !== '') 
+            $query->where('serial_number', 'LIKE', "%$serial_number%");
+        if ($desc !== '')
+            $query->where('desc', 'LIKE', "%$desc%");
+        $equipments = $query->paginate($per_page);
+        return new EquipmentCollection($equipments);    
     }
 
     public function store(Request $request)
