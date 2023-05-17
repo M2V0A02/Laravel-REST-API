@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\ValidationException;
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ class EquipmentResourceController extends Controller
     public function index()
     {
         $per_page = request()->get('per_page', 10);
+        if (is_numeric($per_page) && $per_page <= 0)
+            $per_page = 10;
         $serial_number = request()->get('serial_number', '');
         $desc = request()->get('desc', '');
         $query = Equipment::query();
@@ -26,9 +29,27 @@ class EquipmentResourceController extends Controller
 
     public function store(Request $request)
     {
-        $equipment = new Equipment($request->all());
-        $equipment->save();
-        return new EquipmentResource($equipment);
+        $jsonStringArray = $request->getContent();
+        $equipmentJsonArray = json_decode($jsonStringArray, true);
+        $returnEquipments = [];
+        $errorEquipments = [];
+        foreach($equipmentJsonArray as $equipmentJson) {
+            $equipment = new Equipment($equipmentJson);
+            try {
+                $equipment->save();
+            } catch(ValidationException $e) {
+                $errorEquipments[] = [
+                    'equipment' => $equipment,
+                    'error_message' => $e->getMessage()
+                ];
+                continue;
+            }
+            $returnEquipments[] = $equipment;
+        }
+        return response()->json([
+            'success' => new EquipmentCollection($returnEquipments),
+            'errors' => $errorEquipments
+        ]);
     }
 
     
