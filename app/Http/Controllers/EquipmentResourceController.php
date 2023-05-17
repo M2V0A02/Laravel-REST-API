@@ -61,8 +61,18 @@ class EquipmentResourceController extends Controller
     public function update(Request $request, string $id)
     {
         $equipment = Equipment::find($id);
-        $equipment->fill($request->all());
-        $equipment->save();
+        $payload = request()->only([
+            'serial_number',
+            'desc'
+        ]);
+        try {
+        $equipment->update($payload);
+        } catch(\Exception $e) {
+            return response()->json([
+                'error_message' => $e->getMessage()
+            ], 422);
+        }
+        return new EquipmentResource($equipment);
     }
 
     

@@ -27,24 +27,26 @@ class Equipment extends Model
         return true;
     }
 
+    public function update(array $attributes = [], array $options = [])
+    {
+        $validator = Validator::make($options, [
+            'serial_number' => new SerialNumber($this->equipmentType),
+        ]);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+
+        parent::update($attributes, $options);
+        return true;
+    }
+
     public function equipmentType()
     {
         return $this->belongsTo(EquipmentType::class);
     }
     
-    // protected static function boot()
-    // {
-    //     parent::boot();
-    //     Validator::extend('serial_number', function($attribute, $value, $parameters, $validator) {
-    //         dd($validator);
-    //         $equipment = $validator->getData()[$parameters[0]];
-    //         $regx = $equipment->equipmentType->getRegexFromMask;
-    //         if ($regx === '') return true;
-    //         return preg_match($regx, $value);
-    //     });
-    // }
     protected $fillable = [
-        'equipment_type_id',
         'serial_number',
         'desc'
     ];

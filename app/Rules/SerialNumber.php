@@ -21,6 +21,6 @@ class SerialNumber implements Rule
 
     public function message()
     {
-        return 'Серийный номер не соответствует маски';
+        return 'Серийный номер  не соответствует маски';
     }
 }
