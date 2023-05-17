@@ -16,7 +16,7 @@ class SerialNumber implements Rule
 
     public function passes($attribute, $value)
     {
-        return preg_match('/' . $this->equipmentType->getRegexFromMask() . '/', $value);
+        return !preg_replace('/' . $this->equipmentType->getRegexFromMask() . '/', '', $value);
     }
 
     public function message()
