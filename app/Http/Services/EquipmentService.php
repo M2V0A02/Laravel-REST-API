@@ -4,6 +4,7 @@ namespace App\Http\Services;
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use App\Models\Equipment;
+use App\Models\EquipmentType;
 use App\Rules\SerialNumber;
 use Illuminate\Support\Facades\Validator;
 
@@ -80,9 +81,12 @@ class EquipmentService
     * В случае успешного выполнения возвращает успешное сообщение.
     */
     public function updateEquipment($equipment, $payload) {
+        $equipmentType = $payload['equipment_type_id']
+          ? EquipmentType::find($payload['equipment_type_id'])
+          : $equipment->equipmentType();
         $validator = Validator::make($payload, [
-            'serial_number' => ['required', 'string', new SerialNumber($equipment->equipmentType)],
-            'equipment_type_id' => 'required|integer',
+            'serial_number' => ['string', new SerialNumber($equipmentType)],
+            'equipment_type_id' => 'integer',
             'desc' => 'string'
         ]);
 

@@ -68,7 +68,8 @@ class EquipmentResourceController extends Controller
         $equipment = Equipment::find($id);
         $payload = request()->only([
             'serial_number',
-            'desc'
+            'desc',
+            'equipment_type_id'
         ]);
         $message = (new EquipmentService)->updateEquipment($equipment, $payload);
         return (new EquipmentResource($equipment))->additional($message);
