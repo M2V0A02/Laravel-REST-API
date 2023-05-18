@@ -49,8 +49,8 @@ class EquipmentService
         foreach($equipmentJsonArray as $equipmentJson) {
             $equipment = new Equipment($equipmentJson);
             $validator = Validator::make($equipmentJson, [
-                'serial_number' => ['required', 'string', new SerialNumber($equipment->equipmentType)],
-                'equipment_type_id' => 'required|integer',
+                'serial_number' => ['required', 'string', 'unique:equipment', new SerialNumber($equipment->equipmentType)],
+                'equipment_type_id' => 'required|integer|exists:equipment_types,id',
                 'desc' => 'string'
             ]);
     
@@ -81,12 +81,12 @@ class EquipmentService
     * В случае успешного выполнения возвращает успешное сообщение.
     */
     public function updateEquipment($equipment, $payload) {
-        $equipmentType = $payload['equipment_type_id']
+        $equipmentType = isset($payload['equipment_type_id'])
           ? EquipmentType::find($payload['equipment_type_id'])
-          : $equipment->equipmentType();
+          : $equipment->equipmentType;
         $validator = Validator::make($payload, [
-            'serial_number' => ['string', new SerialNumber($equipmentType)],
-            'equipment_type_id' => 'integer',
+            'serial_number' => ['string', 'unique:equipment', new SerialNumber($equipmentType)],
+            'equipment_type_id' => 'integer|exists:equipment_types,id',
             'desc' => 'string'
         ]);
 

@@ -41,7 +41,7 @@ class EquipmentType extends Model
     {
         $mask = $this->mask;
         $count = mb_strlen($mask);
-        $regx = '';
+        $regx = '/';
         for ($i = 0; $i < $count; $i++) {
             switch ($mask[$i]) {
                 case "N":
@@ -63,6 +63,6 @@ class EquipmentType extends Model
                     break;
             }
         };        
-        return $regx;
+        return $regx . '/';
     }
 }
