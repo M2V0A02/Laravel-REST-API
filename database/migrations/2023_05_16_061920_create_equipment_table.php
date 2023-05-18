@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('equipment_type_id');
-            $table->string('serial_number');
+            $table->string('serial_number')->unique()->nullable(false);;
             $table->text('desc')->nullable();
             $table->timestamps();
             $table->softDeletes();
