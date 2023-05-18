@@ -5,12 +5,24 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * EquipmentResource - ресурсный класс для модели Equipment
+ *
+ * @property-read int    $id     Идентификатор оборудования
+ * @property-read string $serial_number Серийный номер оборудования
+ * @property-read string $desc   Описание оборудования
+ * @property-read string $created_at Дата и время создания объекта
+ * @property-read string $updated_at Дата и время последнего обновления объекта
+ * @property-read EquipmentType $equipmentType Тип оборудования
+ */
+
 class EquipmentResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Преобразовать ресурс в массив.
      *
-     * @return array<string, mixed>
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
      */
     public function toArray(Request $request): array
     {
