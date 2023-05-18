@@ -37,7 +37,7 @@ class SerialNumber implements Rule
     public function passes($attribute, $value)
     {
         if ($this->equipmentType === null) {
-            $this->message = 'У оборудования не существует типа оборудования';
+            $this->message = 'Для этого оборудования неопределен его тип';
             return false;
         }
 

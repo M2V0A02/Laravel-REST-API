@@ -11,7 +11,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class EquipmentCollection extends ResourceCollection
 {
 
-    protected $errorEquipments;
+    protected array $errorEquipments = [];
 
     public function __construct($resource, $errorEquipments = [])
     {
@@ -28,9 +28,10 @@ class EquipmentCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return [
-            'success' =>  parent::toArray($request),
-            'errors' => $this->errorEquipments,
-        ];
+        $result = [];
+        if (count($this->errorEquipments))
+            $result['errors'] = $this->errorEquipments;
+        $result['success'] =  parent::toArray($request);
+        return $result;
     }
 }
