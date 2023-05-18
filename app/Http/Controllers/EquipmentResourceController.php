@@ -81,10 +81,12 @@ class EquipmentResourceController extends Controller
      * Этот метод удаляет запись об оборудовании с указанным ID.
      *
      * @param string $id ID записи об оборудовании, которую нужно удалить.
-     * @return void
+     * @return \Illuminate\Http\JsonResponse JSON-ответ, сообщающий об успешном удалении или об ошибке.
      */
-    public function destroy(string $id)
+    public function destroy(string $id):JsonResponse
     {
-        Equipment::destroy($id);
+        $deleted = Equipment::destroy($id);
+        return $deleted ? response()->json(['message' => 'Удаление произошло успешно'], 200)
+                        : response()->json(['message' => 'Ресурс не найден'], 404);
     }
 }
