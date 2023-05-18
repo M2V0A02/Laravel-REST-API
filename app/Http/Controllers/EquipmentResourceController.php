@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Validation\ValidationException;
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use Illuminate\Http\Request;
 use App\Models\Equipment;
+use App\Http\Services\EquipmentService;
 
 class EquipmentResourceController extends Controller
 {
@@ -14,42 +14,18 @@ class EquipmentResourceController extends Controller
     public function index()
     {
         $per_page = request()->get('per_page', 10);
-        if (is_numeric($per_page) && $per_page <= 0)
-            $per_page = 10;
-        $serial_number = request()->get('serial_number', '');
-        $desc = request()->get('desc', '');
-        $query = Equipment::query();
-        if ($serial_number !== '') 
-            $query->where('serial_number', 'LIKE', "%$serial_number%");
-        if ($desc !== '')
-            $query->where('desc', 'LIKE', "%$desc%");
-        $equipments = $query->paginate($per_page);
+        $serial_number = request()->get('serial_number', '') ?? '';
+        $desc = request()->get('desc', '') ?? '';
+        $equipments = (new EquipmentService)->index($per_page, $serial_number, $desc);
         return new EquipmentCollection($equipments);    
     }
 
     public function store(Request $request)
     {
-        $jsonStringArray = $request->getContent();
-        $equipmentJsonArray = json_decode($jsonStringArray, true);
-        $returnEquipments = [];
-        $errorEquipments = [];
-        foreach($equipmentJsonArray as $equipmentJson) {
-            $equipment = new Equipment($equipmentJson);
-            try {
-                $equipment->save();
-            } catch(ValidationException $e) {
-                $errorEquipments[] = [
-                    'equipment' => $equipment,
-                    'error_message' => $e->getMessage()
-                ];
-                continue;
-            }
-            $returnEquipments[] = $equipment;
-        }
-        return response()->json([
-            'success' => new EquipmentCollection($returnEquipments),
-            'errors' => $errorEquipments
-        ]);
+        $equipmentJsonArray = json_decode($request->getContent(), true);
+        $result = (new EquipmentService)->saveEquipment($equipmentJsonArray);
+        
+        return response()->json($result, 201);
     }
 
     
@@ -65,14 +41,8 @@ class EquipmentResourceController extends Controller
             'serial_number',
             'desc'
         ]);
-        try {
-        $equipment->update($payload);
-        } catch(\Exception $e) {
-            return response()->json([
-                'error_message' => $e->getMessage()
-            ], 422);
-        }
-        return new EquipmentResource($equipment);
+        $result = (new EquipmentService)->updateEquipment($equipment, $payload);
+        return response()->json($result);
     }
 
     

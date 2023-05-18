@@ -13,34 +13,6 @@ class Equipment extends Model
 {
     use HasFactory, SoftDeletes;
     
-    public function save(array $options = [])
-    {
-        $validator = Validator::make($this->attributes, [
-            'serial_number' => new SerialNumber($this->equipmentType),
-        ]);
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
-        parent::save($options);
-        return true;
-    }
-
-    public function update(array $attributes = [], array $options = [])
-    {
-        $validator = Validator::make($options, [
-            'serial_number' => new SerialNumber($this->equipmentType),
-        ]);
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
-        parent::update($attributes, $options);
-        return true;
-    }
-
     public function equipmentType()
     {
         return $this->belongsTo(EquipmentType::class);
@@ -48,7 +20,8 @@ class Equipment extends Model
     
     protected $fillable = [
         'serial_number',
-        'desc'
+        'desc',
+        'equipment_type_id'
     ];
     
     
