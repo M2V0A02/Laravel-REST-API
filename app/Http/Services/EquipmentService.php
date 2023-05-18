@@ -41,7 +41,7 @@ class EquipmentService
      *
      * @return array Результат сохранения оборудования
      */
-    public function saveEquipment(array $equipmentJsonArray):EquipmentCollection
+    public function saveEquipment(array $equipmentJsonArray):array
     {
         $returnEquipments = [];
         $errorEquipments = [];
@@ -63,7 +63,10 @@ class EquipmentService
             $returnEquipments[] = $equipment;
         }
 
-        return new EquipmentCollection($returnEquipments, $errorEquipments);
+        return [
+            "success" => $returnEquipments,
+            "errors" => $errorEquipments
+        ];
     }
 
      /**

@@ -34,14 +34,13 @@ class EquipmentResourceController extends Controller
      *
      * @param Request $request      Объект запроса
      *
-     * @return JsonResponse        JSON ответ
+     * @return EquipmentCollection        JSON ответ
      */
     public function store(Request $request): EquipmentCollection
     {
         $equipmentJsonArray = json_decode($request->getContent(), true);
         $result = (new EquipmentService)->saveEquipment($equipmentJsonArray);
-        
-        return $result;
+        return new EquipmentCollection($result['success'], $result['errors']);
     }
 
     /**
