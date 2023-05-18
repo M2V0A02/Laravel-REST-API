@@ -67,23 +67,26 @@ class EquipmentService
     }
 
      /**
-     * Обновить оборудование
-     *
-     * @param \App\Models\Equipment $equipment Объект оборудования для обновления
-     * @param array                 $payload   Данные об оборудовании
-     *
-     * @return \App\Http\Resources\EquipmentResource|array Обновленный объект оборудования или сообщение об ошибке
-     */
+    * Обновляет данные оборудования.
+    *
+    * @param Equipment $equipment Объект оборудования для обновления.
+    * @param array $payload Массив данных для обновления.
+    * @return array Если не удалось выполнить обновление, возвращает массив с сообщением об ошибке.
+    * В случае успешного выполнения возвращает успешное сообщение.
+    */
     public function updateEquipment($equipment, $payload) {
         $validator = Validator::make($payload, [
             'serial_number' => new SerialNumber($equipment->equipmentType),
         ]);
 
         if ($validator->fails()) {
-            return ['error_message' => $validator->errors()];
+            return [
+                'message' => 'Ошибка валидации',
+                'errors' => $validator->errors()
+            ];
         }
 
         $equipment->update($payload);
-        return new EquipmentResource($equipment);
+        return ['message' => 'Инструмент обновлен'];
     }
 }

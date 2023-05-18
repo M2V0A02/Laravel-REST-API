@@ -62,17 +62,17 @@ class EquipmentResourceController extends Controller
      * @param Request $request      Объект запроса
      * @param string $id            Идентификатор оборудования
      *
-     * @return JsonResponse        JSON ответ
+     * @return EquipmentResource        EquipmentResource ответ
      */
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request, string $id): EquipmentResource
     {
         $equipment = Equipment::find($id);
         $payload = request()->only([
             'serial_number',
             'desc'
         ]);
-        $result = (new EquipmentService)->updateEquipment($equipment, $payload);
-        return response()->json($result);
+        $message = (new EquipmentService)->updateEquipment($equipment, $payload);
+        return (new EquipmentResource($equipment))->additional($message);
     }
 
     /**
