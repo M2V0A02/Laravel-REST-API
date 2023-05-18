@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::resource('equipment', EquipmentResourceController::class)->except([
     'create', 'edit'
 ]);
-Route::resource('equipment-types', EquipmentTypeResourceController::class)->only([
+Route::resource('equipment-type', EquipmentTypeResourceController::class)->only([
     'index'
 ]);
 

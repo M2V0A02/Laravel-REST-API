@@ -50,7 +50,7 @@ class EquipmentService
     }
 
     public function updateEquipment($equipment, $payload) {
-        $validator = Validator::make(json_decode($equipment, true), [
+        $validator = Validator::make($payload, [
             'serial_number' => new SerialNumber($equipment->equipmentType),
         ]);
 
