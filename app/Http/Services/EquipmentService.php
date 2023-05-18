@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Services;
 
+use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use App\Models\Equipment;
 use App\Rules\SerialNumber;
-use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -41,7 +41,7 @@ class EquipmentService
      *
      * @return array Результат сохранения оборудования
      */
-    public function saveEquipment(array $equipmentJsonArray) 
+    public function saveEquipment(array $equipmentJsonArray):EquipmentCollection
     {
         $returnEquipments = [];
         $errorEquipments = [];
@@ -62,10 +62,8 @@ class EquipmentService
             $equipment->save(); 
             $returnEquipments[] = $equipment;
         }
-        return [
-            'success' => $returnEquipments,
-            'errors' => $errorEquipments
-        ];
+
+        return new EquipmentCollection($returnEquipments, $errorEquipments);
     }
 
      /**

@@ -10,6 +10,16 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
  */
 class EquipmentCollection extends ResourceCollection
 {
+
+    protected $errorEquipments;
+
+    public function __construct($resource, $errorEquipments = [])
+    {
+        parent::__construct($resource);
+        $this->errorEquipments = $errorEquipments;
+    }
+
+
      /**
      * Преобразовать коллекцию ресурсов в массив.
      *
@@ -18,6 +28,9 @@ class EquipmentCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'success' =>  parent::toArray($request),
+            'errors' => $this->errorEquipments,
+        ];
     }
 }
