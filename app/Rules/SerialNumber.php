@@ -16,13 +16,13 @@ class SerialNumber implements Rule
      * @var EquipmentType $equipmentType Тип оборудования
      */
     protected $equipmentType;
-
+    protected string $message = '';
     /**
      * Определяет из какого типа оборудования нужно будет брать маску.
      *
      * @param EquipmentType $equipmentType тип оборудование из которого будут брать маску
      */
-    public function __construct(EquipmentType $equipmentType)
+    public function __construct(?EquipmentType $equipmentType)
     {
         $this->equipmentType = $equipmentType;
     }
@@ -36,7 +36,17 @@ class SerialNumber implements Rule
      */
     public function passes($attribute, $value)
     {
-        return !preg_replace('/' . $this->equipmentType->getRegexFromMask() . '/', '', $value);
+        if ($this->equipmentType === null) {
+            $this->message = 'У оборудования не существует типа оборудования';
+            return false;
+        }
+
+        if (preg_replace($this->equipmentType->getRegexFromMask(), '', $value)) {
+            $this->message = 'Серийный номер  не соответствует маски';
+            return false;
+        }
+
+        return true;
     }
     
     /**
@@ -46,6 +56,6 @@ class SerialNumber implements Rule
      */
     public function message()
     {
-        return 'Серийный номер  не соответствует маски';
+        return $this->message;
     }
 }
