@@ -19,14 +19,22 @@ class EquipmentService
      * @param int    $per_page      Число элементов на странице
      * @param string $serial_number Серийный номер оборудования
      * @param string $desc          Описание оборудования
-     *
+     * @param string $q             Поиск по нескольким столбцам
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator Список оборудования с пагинацией
      */
-    public function index(int $per_page = 10, string $serial_number = '', string $desc = '') 
+    public function index(int $per_page = 10, string $serial_number = '', string $desc = '', string $q = '') 
     {
         if (is_numeric($per_page) && $per_page <= 0)
             $per_page = 10;
+        
         $query = Equipment::query();
+        
+        if ($q !== '')
+            return $query
+                    ->where('serial_number', 'LIKE', "%$q%")
+                    ->orWhere('desc', 'LIKE', "%$q%")
+                    ->paginate($per_page);
+        
         if ($serial_number !== '') 
             $query->where('serial_number', 'LIKE', "%$serial_number%");
         if ($desc !== '')
