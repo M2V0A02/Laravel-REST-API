@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaveEquipmentRequest;
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use Illuminate\Http\JsonResponse;
@@ -33,14 +34,13 @@ class EquipmentResourceController extends Controller
     /**
      * Создать новый объект оборудования.
      *
-     * @param Request $request      Объект запроса
+     * @param SaveEquipmentRequest $request HTTP-запрос, содержащий данные оборудования для сохранения.
      *
-     * @return EquipmentCollection        JSON ответ
+     * @return EquipmentCollection Возвращает экземпляр класса EquipmentCollection, содержащий результат операции.
      */
-    public function store(Request $request): EquipmentCollection
+    public function store(SaveEquipmentRequest $request): EquipmentCollection
     {
-        $equipmentJsonArray = json_decode($request->getContent(), true);
-        $result = (new EquipmentService)->saveEquipment($equipmentJsonArray);
+        $result = (new EquipmentService)->saveEquipment($request);
         return new EquipmentCollection($result['success'], $result['errors']);
     }
 

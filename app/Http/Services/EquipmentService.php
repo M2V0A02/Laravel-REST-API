@@ -1,8 +1,7 @@
 <?php
 namespace App\Http\Services;
 
-use App\Http\Resources\EquipmentCollection;
-use App\Http\Resources\EquipmentResource;
+use App\Http\Requests\SaveEquipmentRequest;
 use App\Models\Equipment;
 use App\Models\EquipmentType;
 use App\Rules\SerialNumber;
@@ -46,37 +45,18 @@ class EquipmentService
     /**
      * Сохранить оборудование
      *
-     * @param array $equipmentJsonArray Массив данных об оборудовании в формате JSON
+     * @param SaveEquipmentRequest $request Запрос на сохранение оборудования.
      *
-     * @return array Результат сохранения оборудования
+     * @return array Массив, содержащий два ключа: "success", который содержит массив проверенных данных, соответствующих оборудованию, и "errors", который содержит массив ошибок валидации.
      */
-    public function saveEquipment(array $equipmentJsonArray):array
+    public function saveEquipment(SaveEquipmentRequest $request):array
     {
-        $returnEquipments = [];
-        $errorEquipments = [];
-        foreach($equipmentJsonArray as $equipmentJson) {
-            $equipment = new Equipment($equipmentJson);
-            $validator = Validator::make($equipmentJson, [
-                'serial_number' => ['required', 'string', 'unique:equipment', new SerialNumber($equipment->equipmentType)],
-                'equipment_type_id' => 'required|integer|exists:equipment_types,id',
-                'desc' => 'string'
-            ]);
-    
-            if ($validator->fails()) {
-                $errorEquipments[] = [
-                    'equipment' => $equipment,
-                    'error_message' => $validator->errors()
-                ];
-                continue;
-            }
-
-            $equipment->save(); 
-            $returnEquipments[] = $equipment;
-        }
-
+        foreach($request->validated() as $equipment)
+            $equipment->save();
+        
         return [
-            "success" => $returnEquipments,
-            "errors" => $errorEquipments
+            "success" => $request->validated(),
+            "errors" => $request->errors()
         ];
     }
 
