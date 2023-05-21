@@ -4,6 +4,7 @@ namespace App\Http\Services;
 use App\Http\Requests\SaveEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
 use App\Models\Equipment;
+use Illuminate\Http\Request;
 
 /**
  * Сервис оборудования
@@ -13,14 +14,16 @@ class EquipmentService
     /**
      * Получить список оборудования с пагинацией и поиском
      *
-     * @param int    $per_page      Число элементов на странице
-     * @param string $serial_number Серийный номер оборудования
-     * @param string $desc          Описание оборудования
-     * @param string $q             Поиск по нескольким столбцам
+     * @param Request  $request запрос через GET может передовать per_page, serial_number, desc, q
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator Список оборудования с пагинацией
      */
-    public function index(int $per_page = 10, string $serial_number = '', string $desc = '', string $q = '') 
+    public function index(Request $request) 
     {
+        $per_page = $request->get('per_page', 10);
+        $serial_number = $request->get('serial_number', '') ?? '';
+        $desc = $request->get('desc', '') ?? '';
+        $q = $request->get('q', '') ?? '';
+        
         if (is_numeric($per_page) && $per_page <= 0)
             $per_page = 10;
         

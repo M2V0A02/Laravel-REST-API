@@ -25,11 +25,7 @@ class EquipmentResourceController extends Controller
      */
     public function index(Request $request): EquipmentCollection
     {
-        $per_page = $request->get('per_page', 10);
-        $serial_number = $request->get('serial_number', '') ?? '';
-        $desc = $request->get('desc', '') ?? '';
-        $q = $request->get('q', '') ?? '';
-        $equipments = (new EquipmentService)->index($per_page, $serial_number, $desc, $q);
+        $equipments = (new EquipmentService)->index($request);
         return new EquipmentCollection($equipments);    
     }
     /**
