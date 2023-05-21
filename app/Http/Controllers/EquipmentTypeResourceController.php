@@ -20,10 +20,7 @@ class EquipmentTypeResourceController extends Controller
      */
     public function index(Request $request)
     {
-        $per_page = $request->get('per_page', 10);
-        $name = $request->get('name', '') ?? '';
-        $q = $request->get('q', '') ?? '';
-        $equipmentsType = (new EquipmentTypeService)->index($per_page, $name, $q);
+        $equipmentsType = (new EquipmentTypeService)->index($request);
         return new EquipmentTypeCollection($equipmentsType);      
     }
 
