@@ -61,7 +61,7 @@ class EquipmentService
      /**
     * Обновляет данные оборудования.
     *
-    * @param UpdateEquipmentRequest $request запрос обновление ресур.
+    * @param UpdateEquipmentRequest $request запрос обновления ресурса.
     * @return array Если не удалось выполнить обновление, возвращает массив с сообщением об ошибке.
     * В случае успешного выполнения возвращает успешное сообщение.
     */

@@ -6,15 +6,40 @@ use App\Models\Equipment;
 use App\Models\EquipmentType;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Класс формы запроса для обновления объекта Equipment.
+ *
+ * @package App\Http\Requests
+ */
 class UpdateEquipmentRequest extends FormRequest
 {
+    /**
+     * Флаг, указывающий на прохождение валидации.
+     *
+     * @var bool
+     */
     protected bool $fails = true;
-
+    
+    /**
+     * Сообщения.
+     *
+     * @var array
+     */
     protected array $messages = [];
 
+    /**
+     * Объект, содержащий обновленные данные.
+     *
+     * @var Equipment
+     */
     protected Equipment $equipment;
-
-    protected function prepareForValidation()
+    
+    /**
+     * Валидации данных.
+     * 
+     * @return void
+     */
+    protected function prepareForValidation(): void
     {
         $equipment = Equipment::find($this->route('equipment'));
 
@@ -22,7 +47,7 @@ class UpdateEquipmentRequest extends FormRequest
             $this->equipment = new Equipment;
             $this->fails = true;
             $this->messages['message'] = 'Этого оборудования не существует';
-            return null;
+            return;
         }
         
         $payload = request()->only([
@@ -56,18 +81,32 @@ class UpdateEquipmentRequest extends FormRequest
         }
         
     }
-
-    public function fails() 
+    /**
+     * Возвращает флаг прохождения валидации.
+     *
+     * @return bool
+     */
+    public function fails(): bool 
     {
         return $this->fails;
     }
-
-    public function messages()
+    
+    /**
+     * Возвращает сообщения.
+     *
+     * @return array
+     */
+    public function messages(): array
     {
         return $this->messages;
     }
 
-    public function equipment()
+    /**
+     * Возвращает объект Equipment с обновленными данными.
+     *
+     * @return Equipment
+     */
+    public function equipment(): Equipment
     {
         return $this->equipment;
     }

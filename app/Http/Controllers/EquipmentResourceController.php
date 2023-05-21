@@ -60,7 +60,7 @@ class EquipmentResourceController extends Controller
     /**
      * Обновить объект оборудования.
      *
-     * @param UpdateEquipmentRequest $request    запрос на обновления.
+     * @param UpdateEquipmentRequest $request    запрос на обновление оборудования.
      * @param string $id            Идентификатор оборудования
      *
      * @return EquipmentResource        EquipmentResource ответ
