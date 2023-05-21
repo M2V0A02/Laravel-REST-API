@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaveEquipmentRequest;
+use App\Http\Requests\UpdateEquipmentRequest;
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use Illuminate\Http\JsonResponse;
@@ -59,21 +60,15 @@ class EquipmentResourceController extends Controller
     /**
      * Обновить объект оборудования.
      *
-     * @param Request $request      Объект запроса
+     * @param UpdateEquipmentRequest $request    запрос на обновления.
      * @param string $id            Идентификатор оборудования
      *
      * @return EquipmentResource        EquipmentResource ответ
      */
-    public function update(Request $request, string $id): EquipmentResource
+    public function update(UpdateEquipmentRequest $request, string $id): EquipmentResource
     {
-        $equipment = Equipment::find($id);
-        $payload = request()->only([
-            'desc',
-            'serial_number',
-            'equipment_type_id'
-        ]);
-        $message = (new EquipmentService)->updateEquipment($equipment, $payload);
-        return (new EquipmentResource($equipment))->additional($message);
+        $message = (new EquipmentService)->updateEquipment($request);
+        return (new EquipmentResource($request->equipment()))->additional($message);
     }
 
     /**
@@ -84,7 +79,7 @@ class EquipmentResourceController extends Controller
      * @param string $id ID записи об оборудовании, которую нужно удалить.
      * @return \Illuminate\Http\JsonResponse JSON-ответ, сообщающий об успешном удалении или об ошибке.
      */
-    public function destroy(string $id):JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         $deleted = Equipment::destroy($id);
         return $deleted ? response()->json(['message' => 'Удаление произошло успешно'], 200)

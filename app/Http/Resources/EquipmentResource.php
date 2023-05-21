@@ -28,6 +28,17 @@ class EquipmentResource extends JsonResource
     public function toArray(Request $request): array
     {
         $equipment_type = $this->equipmentType;
+
+        if ($equipment_type === null)
+            return [
+                "id" => $this->id,
+                "equipment_type" => null,
+                "serial_number" => $this->serial_number,
+                "desc" => $this->desc,
+                "created_at" => $this->created_at,
+                "updated_at" => $this->updated_at
+            ];
+        
         return [
             "id" => $this->id,
             "equipment_type" => [

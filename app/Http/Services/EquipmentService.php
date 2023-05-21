@@ -2,10 +2,8 @@
 namespace App\Http\Services;
 
 use App\Http\Requests\SaveEquipmentRequest;
+use App\Http\Requests\UpdateEquipmentRequest;
 use App\Models\Equipment;
-use App\Models\EquipmentType;
-use App\Rules\SerialNumber;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Сервис оборудования
@@ -63,29 +61,16 @@ class EquipmentService
      /**
     * Обновляет данные оборудования.
     *
-    * @param Equipment $equipment Объект оборудования для обновления.
-    * @param array $payload Массив данных для обновления.
+    * @param UpdateEquipmentRequest $request запрос обновление ресур.
     * @return array Если не удалось выполнить обновление, возвращает массив с сообщением об ошибке.
     * В случае успешного выполнения возвращает успешное сообщение.
     */
-    public function updateEquipment($equipment, $payload) {
-        $equipmentType = isset($payload['equipment_type_id'])
-          ? EquipmentType::find($payload['equipment_type_id'])
-          : $equipment->equipmentType;
-        $validator = Validator::make($payload, [
-            'serial_number' => ['string', 'unique:equipment', new SerialNumber($equipmentType)],
-            'equipment_type_id' => 'integer|exists:equipment_types,id',
-            'desc' => 'string'
-        ]);
-
-        if ($validator->fails()) {
-            return [
-                'message' => 'Ошибка валидации',
-                'errors' => $validator->errors()
-            ];
-        }
-
-        $equipment->update($payload);
-        return ['message' => 'Инструмент обновлен'];
+    public function updateEquipment(UpdateEquipmentRequest $request) {
+        
+        if ($request->fails()) 
+            return $request->messages();    
+        
+        $request->equipment()->update();
+        return $request->messages();
     }
 }
