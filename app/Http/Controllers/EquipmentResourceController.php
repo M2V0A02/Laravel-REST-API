@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Equipment;
 use App\Http\Services\EquipmentService;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * EquipmentResourceController - контроллер для управления ресурсом оборудования
@@ -25,9 +26,17 @@ class EquipmentResourceController extends Controller
      */
     public function index(Request $request): EquipmentCollection
     {
+        $cacheKey = $request->fullUrl();
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
         $equipments = (new EquipmentService)->index($request);
-        return new EquipmentCollection($equipments);    
-    }
+        $collection = new EquipmentCollection($equipments);
+        Cache::put($cacheKey, $collection, 60); // Cache for 60 seconds
+        return $collection; 
+}
     /**
      * Создать новый объект оборудования.
      *
@@ -48,9 +57,17 @@ class EquipmentResourceController extends Controller
      *
      * @return EquipmentResource   Ресурс объекта оборудования
      */
-    public function show(string $id): EquipmentResource
+    public function show(Request $request, string $id): EquipmentResource
     {
-        return new EquipmentResource(Equipment::findOrFail($id));
+        $cacheKey = $request->fullUrl();
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+        
+        $equipment = new EquipmentResource(Equipment::findOrFail($id));
+        Cache::put($cacheKey, $equipment); 
+        return $equipment;
     }
 
     /**
